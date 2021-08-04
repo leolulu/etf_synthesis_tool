@@ -1,3 +1,5 @@
+import traceback
+
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
@@ -43,9 +45,12 @@ def get_info_by_buttons(n_clicks1, n_clicks2, etf_codes):
         return "功能未开发..."
 
     def adhoc_query():
-        result = etf_gatheror(etf_codes)
-        result = map(lambda x: "\t".join(x), result)
-        result = "\n".join(result)
+        try:
+            result = etf_gatheror(etf_codes)
+            result = map(lambda x: "\t".join(x), result)
+            result = "\n".join(result)
+        except:
+            result = "出问题了，请联系开发人员，出错信息如下：\n\n" + traceback.format_exc()
         return result
 
     triggered_id = dash.callback_context.triggered[0]['prop_id'].split('.')[0]

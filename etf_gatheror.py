@@ -19,6 +19,7 @@ def etf_gatheror(etf_codes):
 
     result = [["代码", "名称", "净值估算", "单位净值"]]
     for etf_code in etf_codes:
+        etf_code = etf_code.strip()
         r = requests.get(base_web_url.format(etf_code), headers=headers)
         html = etree.HTML(r.content)
         unit_net_worth = html.xpath(unit_net_worth_xpath)[0]
