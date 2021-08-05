@@ -50,7 +50,7 @@ def get_info_by_buttons(n_clicks1, n_clicks2, etf_codes):
             result = map(lambda x: "\t".join(x), result)
             result = "\n".join(result)
         except:
-            result = "出问题了，请联系开发人员，出错信息如下：\n（多半是etf代码输错了，比如多了空格或是用了中文逗号之类的）\n\n" + traceback.format_exc()
+            result = "出问题了，请联系开发人员（多半是etf代码输错了，比如多了空格或是用了中文逗号之类的），出错信息如下：\n\n" + traceback.format_exc()
         return result
 
     triggered_id = dash.callback_context.triggered[0]['prop_id'].split('.')[0]
