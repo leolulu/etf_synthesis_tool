@@ -14,10 +14,11 @@ def etf_gatheror(etf_codes):
     }
     unit_net_worth_xpath = "//div[@class='dataOfFund']/dl[@class='dataItem02']/dd[1]/span[1]/text()"
     net_worth_estimation_xpath = "//div[@class='dataOfFund']/dl[@class='dataItem01']/dd[1]/dl[1]/span[1]/text()"
+    net_worth_date_xpath = "//div[@class='dataOfFund']/dl[@class='dataItem02']/dt/p/text()"
     etf_name_xpath = "//div[@class='fundDetail-tit']/div/text()"
     etf_code_xpath = "//div[@class='fundDetail-tit']/div/span[@class='ui-num']//text()"
 
-    result = [["代码", "名称", "净值估算", "单位净值"]]
+    result = [["代码", "名称", "净值估算", "估算时间", "单位净值", "净值日期"]]
     for etf_code in etf_codes:
         etf_code = etf_code.strip()
         r = requests.get(base_web_url.format(etf_code), headers=headers)
@@ -25,12 +26,15 @@ def etf_gatheror(etf_codes):
         unit_net_worth = html.xpath(unit_net_worth_xpath)[0]
         etf_name = html.xpath(etf_name_xpath)[0]
         etf_code_display = f"'{html.xpath(etf_code_xpath)[0]}'"
+        net_worth_date = (html.xpath(net_worth_date_xpath)[0]).replace(')', '')
 
         r = requests.get(base_json_url.format(etf_code), headers=headers)
         json_result = re.findall(r"jsonpgz\((.*?)\);", r.content.decode('utf-8'))
-        net_worth_estimation = json.loads(json_result[0])["gsz"]
+        json_data = json.loads(json_result[0])
+        net_worth_estimation = json_data["gsz"]
+        estimated_time = json_data['gztime']
 
-        result.append([etf_code_display, etf_name, net_worth_estimation, unit_net_worth])
+        result.append([etf_code_display, etf_name, net_worth_estimation, estimated_time, unit_net_worth, net_worth_date])
     return result
 
 
