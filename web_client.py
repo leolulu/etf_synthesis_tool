@@ -20,11 +20,23 @@ app.layout = html.Div([
         dcc.Input(id='etf_codes', type='text', value='000697,001725,001685,000925,000696,001490,005802,001726', style={'width': '50%'}),
         html.Button('即时查询', id='adhoc_query'),
     ]),
-    html.Div(dcc.Textarea(
-        id='textarea_log', readOnly=False,
-        style={'width': '80%', 'height': '500px'},
-        value='查询中...'
-    ))
+    html.Div([
+        dcc.Textarea(
+            id='textarea_log', readOnly=False,
+            style={'width': '100%', 'height': '500px'},
+            value='查询中...'
+        ),
+        dcc.Clipboard(
+            target_id="textarea_log",
+            title="copy",
+            style={
+                "position": "absolute",
+                "top": 0,
+                "right": 20,
+                "fontSize": 40,
+            }
+        )
+    ], style={"position": "relative", 'width': '80%'})
 ])
 
 
