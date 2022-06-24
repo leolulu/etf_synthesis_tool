@@ -19,7 +19,7 @@ def etf_gatheror(etf_codes):
     etf_code_xpath = "//div[@class='fundDetail-tit']/div/span[@class='ui-num']//text()"
     fund_size_and_date_xpath = "//div[@class='infoOfFund']//tr[1]/td[2]/text()"
 
-    result = [["代码", "名称", "净值估算", "估算时间", "单位净值", "净值日期", "基金规模（亿元）", "基金规模日期"]]
+    result = [["代码", "名称", "净值估算", "估算时间", "单位净值", "净值日期", "规模", "规模日期"]]
     for etf_code in etf_codes:
         etf_code = etf_code.strip()
         r = requests.get(base_web_url.format(etf_code), headers=headers)
