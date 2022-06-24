@@ -17,8 +17,9 @@ def etf_gatheror(etf_codes):
     net_worth_date_xpath = "//div[@class='dataOfFund']/dl[@class='dataItem02']/dt/p/text()"
     etf_name_xpath = "//div[@class='fundDetail-tit']/div/text()"
     etf_code_xpath = "//div[@class='fundDetail-tit']/div/span[@class='ui-num']//text()"
+    fund_size_and_date_xpath = "//div[@class='infoOfFund']//tr[1]/td[2]/text()"
 
-    result = [["代码", "名称", "净值估算", "估算时间", "单位净值", "净值日期"]]
+    result = [["代码", "名称", "净值估算", "估算时间", "单位净值", "净值日期", "基金规模（亿元）", "基金规模日期"]]
     for etf_code in etf_codes:
         etf_code = etf_code.strip()
         r = requests.get(base_web_url.format(etf_code), headers=headers)
@@ -27,6 +28,10 @@ def etf_gatheror(etf_codes):
         etf_name = html.xpath(etf_name_xpath)[0]
         etf_code_display = f"'{html.xpath(etf_code_xpath)[0]}'"
         net_worth_date = (html.xpath(net_worth_date_xpath)[0]).replace(')', '')
+        fund_size_and_date = html.xpath(fund_size_and_date_xpath)[0]
+        fund_size_and_date = re.findall(r"([\d\.]+)亿?元（([\d\-]+)）", fund_size_and_date)
+        fund_size = fund_size_and_date[0][0]
+        fund_size_date = fund_size_and_date[0][1]
 
         r = requests.get(base_json_url.format(etf_code), headers=headers)
         json_result = re.findall(r"jsonpgz\((.*?)\);", r.content.decode('utf-8'))
@@ -34,7 +39,7 @@ def etf_gatheror(etf_codes):
         net_worth_estimation = json_data["gsz"]
         estimated_time = json_data['gztime']
 
-        result.append([etf_code_display, etf_name, net_worth_estimation, estimated_time, unit_net_worth, net_worth_date])
+        result.append([etf_code_display, etf_name, net_worth_estimation, estimated_time, unit_net_worth, net_worth_date, fund_size, fund_size_date])
     return result
 
 
